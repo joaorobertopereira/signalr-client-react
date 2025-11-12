@@ -47,11 +47,16 @@ export function MessageDisplay({ messages, isConnected, connectedUrl, connectedE
   };
 
   const getStatusClass = (status: string): string => {
-    const statusLower = status.toLowerCase();
+    const statusLower = status.toLowerCase().trim();
+    console.log('Status recebido:', status, '| Lowercase:', statusLower);
+    
     if (statusLower === 'aprovado') return 'status-aprovado';
-    if (statusLower === 'reprovado') return 'status-reprovado';
+    if (statusLower === 'reprovado' || statusLower === 'rejeitado') return 'status-reprovado';
     if (statusLower === 'pendente') return 'status-pendente';
-    return '';
+    
+    // Default para vermelho se não reconhecer
+    console.warn('Status não reconhecido, usando vermelho como padrão:', status);
+    return 'status-reprovado';
   };
 
   return (
