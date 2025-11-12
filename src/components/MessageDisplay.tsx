@@ -54,7 +54,6 @@ export function MessageDisplay({ messages, isConnected, connectedUrl, connectedE
     if (statusLower === 'reprovado' || statusLower === 'rejeitado') return 'status-reprovado';
     if (statusLower === 'pendente') return 'status-pendente';
     
-    // Default para vermelho se não reconhecer
     console.warn('Status não reconhecido, usando vermelho como padrão:', status);
     return 'status-reprovado';
   };
