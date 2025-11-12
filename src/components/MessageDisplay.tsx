@@ -11,6 +11,7 @@ interface MessageDisplayProps {
   isConnected: boolean;
   connectedUrl: string;
   connectedEvent: string;
+  connectionError: string;
 }
 
 interface ParsedMessage {
@@ -19,7 +20,7 @@ interface ParsedMessage {
   message?: string;
 }
 
-export function MessageDisplay({ messages, isConnected, connectedUrl, connectedEvent }: MessageDisplayProps) {
+export function MessageDisplay({ messages, isConnected, connectedUrl, connectedEvent, connectionError }: MessageDisplayProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -58,13 +59,23 @@ export function MessageDisplay({ messages, isConnected, connectedUrl, connectedE
       <h2>Mensagens Recebidas</h2>
       
       {isConnected && (
-        <div className="connection-status-card">
+        <div className="connection-status-card success">
           <div className="status-icon">✓</div>
           <div className="status-info">
             <div className="status-label">Host Conectado:</div>
             <div className="status-value">{connectedUrl}</div>
             <div className="status-label">Evento:</div>
             <div className="status-value">{connectedEvent}</div>
+          </div>
+        </div>
+      )}
+
+      {connectionError && (
+        <div className="connection-status-card error">
+          <div className="status-icon">✗</div>
+          <div className="status-info">
+            <div className="status-label">Erro ao Conectar:</div>
+            <div className="status-value error-message">{connectionError}</div>
           </div>
         </div>
       )}
