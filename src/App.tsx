@@ -50,7 +50,6 @@ function App() {
       setConnectedUrl(url);
       setConnectedEvent(eventName);
       
-      // Adiciona ao histórico apenas quando conecta com sucesso
       addUrl(url);
       addEvent(eventName);
 
