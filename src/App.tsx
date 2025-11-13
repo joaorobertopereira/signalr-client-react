@@ -25,7 +25,7 @@ function App() {
     try {
       // Limpa erro anterior
       setConnectionError('');
-      
+
       const connection = new signalR.HubConnectionBuilder()
         .withUrl(url)
         .withAutomaticReconnect()
@@ -43,13 +43,13 @@ function App() {
       });
 
       await connection.start();
-      
+
       connectionRef.current = connection;
       currentEventRef.current = eventName;
       setIsConnected(true);
       setConnectedUrl(url);
       setConnectedEvent(eventName);
-      
+
       addUrl(url);
       addEvent(eventName);
 
@@ -58,8 +58,7 @@ function App() {
       console.error('Erro ao conectar:', error);
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido ao tentar conectar';
       setConnectionError(errorMessage);
-      
-      // Remove o erro após 10 segundos
+
       setTimeout(() => {
         setConnectionError('');
       }, 10000);
@@ -94,7 +93,7 @@ function App() {
     try {
       if (connectionRef.current && isConnected) {
         await connectionRef.current.invoke(eventName, message);
-        
+
         setMessages((prev) => [
           ...prev,
           {
@@ -133,7 +132,7 @@ function App() {
             urlHistory={urls}
             eventHistory={events}
           />
-          
+
           <MessageSender
             onSend={handleSendMessage}
             isConnected={isConnected}
@@ -142,7 +141,7 @@ function App() {
         </div>
 
         <div className="right-panel">
-          <MessageDisplay 
+          <MessageDisplay
             messages={messages}
             isConnected={isConnected}
             connectedUrl={connectedUrl}

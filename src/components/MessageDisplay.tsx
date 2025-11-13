@@ -30,11 +30,11 @@ export function MessageDisplay({ messages, isConnected, connectedUrl, connectedE
   const parseMessage = (content: string): ParsedMessage | null => {
     try {
       let parsed = JSON.parse(content);
-      
+
       if (typeof parsed === 'string') {
         parsed = JSON.parse(parsed);
       }
-      
+
       if (parsed.customerId && parsed.status && parsed.message) {
         return parsed;
       }
@@ -49,11 +49,11 @@ export function MessageDisplay({ messages, isConnected, connectedUrl, connectedE
   const getStatusClass = (status: string): string => {
     const statusLower = status.toLowerCase().trim();
     console.log('Status recebido:', status, '| Lowercase:', statusLower);
-    
+
     if (statusLower === 'aprovado') return 'status-aprovado';
     if (statusLower === 'reprovado' || statusLower === 'rejeitado') return 'status-reprovado';
     if (statusLower === 'pendente') return 'status-pendente';
-    
+
     console.warn('Status não reconhecido, usando vermelho como padrão:', status);
     return 'status-reprovado';
   };
@@ -61,7 +61,7 @@ export function MessageDisplay({ messages, isConnected, connectedUrl, connectedE
   return (
     <div className="message-display">
       <h2>Mensagens Recebidas</h2>
-      
+
       {isConnected && (
         <div className="connection-status-card success">
           <div className="status-icon">✓</div>
@@ -83,14 +83,13 @@ export function MessageDisplay({ messages, isConnected, connectedUrl, connectedE
           </div>
         </div>
       )}
-      
+
       <div className="messages-container">
         {messages.length === 0 ? (
           <div className="no-messages">Nenhuma mensagem recebida ainda</div>
         ) : (
           messages.map((message, index) => {
             const parsedMessage = parseMessage(message.content);
-            
             if (parsedMessage) {
               return (
                 <div key={index} className={`message-card ${getStatusClass(parsedMessage.status!)}`}>

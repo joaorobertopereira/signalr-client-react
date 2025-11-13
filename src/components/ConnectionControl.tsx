@@ -87,15 +87,15 @@ export function ConnectionControl({ onConnect, onDisconnect, isConnected, urlHis
         </div>
       </div>
       <div className="button-group">
-        <button 
-          onClick={handleConnect} 
+        <button
+          onClick={handleConnect}
           disabled={isConnected || !url.trim() || !eventName.trim()}
           className="btn-connect"
         >
           Conectar
         </button>
-        <button 
-          onClick={onDisconnect} 
+        <button
+          onClick={onDisconnect}
           disabled={!isConnected}
           className="btn-disconnect"
         >

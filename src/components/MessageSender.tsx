@@ -72,8 +72,8 @@ export function MessageSender({ onSend, isConnected, eventHistory }: MessageSend
           rows={4}
         />
       </div>
-      <button 
-        onClick={handleSend} 
+      <button
+        onClick={handleSend}
         disabled={!isConnected || !eventName.trim() || !message.trim()}
         className="btn-send"
       >
