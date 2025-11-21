@@ -28,6 +28,33 @@
   color: #555;
 }
 
+.label-with-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.btn-example {
+  padding: 4px 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-example:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+.btn-example:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .input-with-dropdown {
   position: relative;
   width: 100%;
@@ -48,6 +75,21 @@
 .form-group textarea:disabled {
   background-color: #e9e9e9;
   cursor: not-allowed;
+}
+
+.form-group textarea.error {
+  border-color: #dc3545;
+  background-color: #fff5f5;
+}
+
+.json-error {
+  margin-top: 5px;
+  padding: 8px;
+  background-color: #f8d7da;
+  border: 1px solid #dc3545;
+  border-radius: 4px;
+  color: #721c24;
+  font-size: 13px;
 }
 
 .history-dropdown {
@@ -136,5 +178,16 @@
   color: #856404;
   font-size: 13px;
   text-align: center;
+  flex-shrink: 0;
+}
+
+.info-box {
+  margin-bottom: 12px;
+  padding: 10px;
+  background-color: #d1ecf1;
+  border: 1px solid #bee5eb;
+  border-radius: 4px;
+  color: #0c5460;
+  font-size: 13px;
   flex-shrink: 0;
 }

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import './MessageSender.css';
 
 interface MessageSenderProps {
@@ -11,12 +12,38 @@ export function MessageSender({ onSend, isConnected, eventHistory }: MessageSend
   const [eventName, setEventName] = useState('SendMessage');
   const [message, setMessage] = useState('');
   const [showEventHistory, setShowEventHistory] = useState(false);
+  const [jsonError, setJsonError] = useState<string>('');
 
   const handleSend = () => {
     if (eventName.trim() && message.trim()) {
-      onSend(eventName.trim(), message.trim());
-      setMessage('');
+      // Validar se é JSON válido
+      try {
+        JSON.parse(message.trim());
+        setJsonError('');
+        onSend(eventName.trim(), message.trim());
+        setMessage('');
+      } catch (error) {
+        setJsonError('JSON inválido! Verifique a sintaxe.' + (error instanceof Error ? error.message : ''));
+      }
     }
+  };
+
+  const handleMessageChange = (value: string) => {
+    setMessage(value);
+    // Limpar erro quando o usuário começar a digitar
+    if (jsonError) {
+      setJsonError('');
+    }
+  };
+
+  const insertExample = () => {
+    const example = `{
+  "customerId": "01K75AJ9ES6RMAYDPM9RZDZ5D8",
+  "status": "Aprovado",
+  "message": "Processamento concluído."
+}`;
+    setMessage(example);
+    setJsonError('');
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -29,8 +56,11 @@ export function MessageSender({ onSend, isConnected, eventHistory }: MessageSend
   return (
     <div className="message-sender">
       <h2>Enviar Mensagem</h2>
+      <div className="info-box">
+        ℹ️ O nome do evento deve corresponder a um método existente no servidor SignalR
+      </div>
       <div className="form-group">
-        <label htmlFor="sendEventName">Nome do Evento:</label>
+        <label htmlFor="sendEventName">Nome do Evento/Método:</label>
         <div className="input-with-dropdown">
           <input
             id="sendEventName"
@@ -61,16 +91,28 @@ export function MessageSender({ onSend, isConnected, eventHistory }: MessageSend
         </div>
       </div>
       <div className="form-group">
-        <label htmlFor="message">Mensagem:</label>
+        <div className="label-with-button">
+          <label htmlFor="message">Mensagem (JSON):</label>
+          <button
+            type="button"
+            onClick={insertExample}
+            disabled={!isConnected}
+            className="btn-example"
+          >
+            Inserir Exemplo
+          </button>
+        </div>
         <textarea
           id="message"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) => handleMessageChange(e.target.value)}
           onKeyPress={handleKeyPress}
           disabled={!isConnected}
-          placeholder="Digite sua mensagem aqui..."
-          rows={4}
+          placeholder='{"customerId": "01K75AJ9ES6RMAYDPM9RZDZ5D8", "status": "Aprovado", "message": "Processamento concluído."}'
+          rows={6}
+          className={jsonError ? 'error' : ''}
         />
+        {jsonError && <div className="json-error">{jsonError}</div>}
       </div>
       <button
         onClick={handleSend}

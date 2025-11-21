@@ -92,7 +92,17 @@ function App() {
   const handleSendMessage = async (eventName: string, message: string) => {
     try {
       if (connectionRef.current && isConnected) {
-        await connectionRef.current.invoke(eventName, message);
+        // Parse do JSON para enviar como objeto ao invés de string
+        let parsedMessage;
+        try {
+          parsedMessage = JSON.parse(message);
+        } catch {
+          parsedMessage = message;
+        }
+
+        await connectionRef.current.invoke(eventName, parsedMessage);
+
+        addEvent(eventName);
 
         setMessages((prev) => [
           ...prev,
@@ -102,17 +112,23 @@ function App() {
           },
         ]);
 
-        console.log(`Mensagem enviada: ${message}`);
+        console.log(`Mensagem enviada para método "${eventName}":`, parsedMessage);
       }
     } catch (error) {
       console.error('Erro ao enviar mensagem:', error);
+      const errorMsg = error instanceof Error ? error.message : 'Erro desconhecido';
       setMessages((prev) => [
         ...prev,
         {
           timestamp: new Date(),
-          content: `✗ Erro ao enviar: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
+          content: `✗ Erro ao enviar mensagem: ${errorMsg}`,
         },
       ]);
+      
+      // Mostrar alerta com dica sobre o erro
+      if (errorMsg.includes('Method does not exist')) {
+        alert(`⚠️ Método "${eventName}" não existe no servidor!\n\nVerifique se:\n1. O nome do método está correto\n2. O método existe no Hub do servidor\n3. A assinatura do método está correta`);
+      }
     }
   };
 
