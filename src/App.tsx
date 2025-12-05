@@ -1,9 +1,11 @@
-import { useState, useRef } from 'react';
 import * as signalR from '@microsoft/signalr';
+import { useRef, useState } from 'react';
+
 import { ConnectionControl } from './components/ConnectionControl';
 import { MessageDisplay } from './components/MessageDisplay';
 import { MessageSender } from './components/MessageSender';
 import { useConnectionHistory } from './hooks/useConnectionHistory';
+
 import './App.css';
 
 interface Message {
@@ -32,12 +34,20 @@ function App() {
         .configureLogging(signalR.LogLevel.Information)
         .build();
 
-      connection.on(eventName, (message: string) => {
+      connection.on(eventName, (message: any) => {
+        // Se a mensagem for um objeto, converte para string JSON
+        const content = typeof message === 'object' 
+          ? JSON.stringify(message) 
+          : message;
+        
+        console.log('Conteúdo recebido:', message);
+        console.log('Conteúdo serializado:', content);
+        
         setMessages((prev) => [
           ...prev,
           {
             timestamp: new Date(),
-            content: message,
+            content: content,
           },
         ]);
       });
@@ -124,7 +134,7 @@ function App() {
           content: `✗ Erro ao enviar mensagem: ${errorMsg}`,
         },
       ]);
-      
+
       // Mostrar alerta com dica sobre o erro
       if (errorMsg.includes('Method does not exist')) {
         alert(`⚠️ Método "${eventName}" não existe no servidor!\n\nVerifique se:\n1. O nome do método está correto\n2. O método existe no Hub do servidor\n3. A assinatura do método está correta`);

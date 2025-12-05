@@ -56,9 +56,6 @@ export function MessageSender({ onSend, isConnected, eventHistory }: MessageSend
   return (
     <div className="message-sender">
       <h2>Enviar Mensagem</h2>
-      <div className="info-box">
-        ℹ️ O nome do evento deve corresponder a um método existente no servidor SignalR
-      </div>
       <div className="form-group">
         <label htmlFor="sendEventName">Nome do Evento/Método:</label>
         <div className="input-with-dropdown">
@@ -108,7 +105,7 @@ export function MessageSender({ onSend, isConnected, eventHistory }: MessageSend
           onChange={(e) => handleMessageChange(e.target.value)}
           onKeyPress={handleKeyPress}
           disabled={!isConnected}
-          placeholder='{"customerId": "01K75AJ9ES6RMAYDPM9RZDZ5D8", "status": "Aprovado", "message": "Processamento concluído."}'
+          placeholder='{"ulid": "01K75AJ9ES6RMAYDPM9RZDZ5D8", "status": "Aprovado", "message": "Processamento concluído."}'
           rows={6}
           className={jsonError ? 'error' : ''}
         />

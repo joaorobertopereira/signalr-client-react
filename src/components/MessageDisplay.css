@@ -224,6 +224,17 @@
   color: #212529;
 }
 
+/* Biometric badge styles */
+.biometric-valid {
+  background: #28a745;
+  color: white;
+}
+
+.biometric-invalid {
+  background: #dc3545;
+  color: white;
+}
+
 .messages-container::-webkit-scrollbar {
   width: 8px;
 }
@@ -240,4 +251,92 @@
 
 .messages-container::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+/* Responsividade */
+@media (max-width: 968px) {
+  .message-display {
+    flex: 1;
+    height: auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .messages-container {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .message-display {
+    padding: 12px;
+    flex: 2;
+  }
+
+  .message-display h2 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+  }
+
+  .connection-status-card {
+    padding: 10px 12px;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .status-icon {
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .status-label {
+    font-size: 10px;
+  }
+
+  .status-value {
+    font-size: 12px;
+  }
+
+  .messages-container {
+    padding: 10px;
+    flex: 5;
+  }
+
+  .message-card {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .card-field {
+    gap: 2px;
+  }
+
+  .field-label {
+    font-size: 10px;
+  }
+
+  .field-value {
+    font-size: 13px;
+  }
+
+  .status-badge {
+    padding: 3px 10px;
+    font-size: 12px;
+  }
+
+  .message {
+    padding: 8px;
+    margin-bottom: 8px;
+  }
+
+  .message-timestamp {
+    font-size: 10px;
+  }
+
+  .message-content {
+    font-size: 13px;
+  }
 }

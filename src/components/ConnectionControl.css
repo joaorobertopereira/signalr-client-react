@@ -1,6 +1,6 @@
 .connection-control {
   background: #f5f5f5;
-  padding: 15px;
+  padding: 12px;
   border-radius: 8px;
   flex-shrink: 0;
   display: flex;
@@ -8,13 +8,13 @@
 }
 
 .connection-control h2 {
-  margin: 0 0 12px 0;
+  margin: 0 0 8px 0;
   color: #333;
-  font-size: 1.3em;
+  font-size: 1.2em;
 }
 
 .form-group {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .form-group label {
@@ -31,10 +31,10 @@
 
 .form-group input {
   width: 100%;
-  padding: 8px;
+  padding: 6px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 13px;
   box-sizing: border-box;
 }
 
@@ -94,16 +94,16 @@
 
 .button-group {
   display: flex;
-  gap: 10px;
-  margin-bottom: 12px;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
 .button-group button {
   flex: 1;
-  padding: 10px;
+  padding: 8px;
   border: none;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s;
@@ -143,4 +143,47 @@
 
 .status .disconnected {
   color: #f44336;
+}
+
+/* Responsividade */
+@media (max-width: 968px) {
+  .connection-control {
+    overflow: visible;
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .connection-control {
+    padding: 10px;
+  }
+
+  .connection-control h2 {
+    font-size: 1.1em;
+    margin-bottom: 6px;
+  }
+
+  .form-group {
+    margin-bottom: 6px;
+  }
+
+  .form-group input {
+    font-size: 13px;
+    padding: 6px;
+  }
+
+  .button-group {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .button-group button {
+    width: 100%;
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .status {
+    font-size: 13px;
+  }
 }

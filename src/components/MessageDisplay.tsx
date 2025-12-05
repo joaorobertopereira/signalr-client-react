@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+
 import './MessageDisplay.css';
 
 interface Message {
@@ -15,10 +16,14 @@ interface MessageDisplayProps {
 }
 
 interface ParsedMessage {
-  customerId?: string;
+  ulid?: string;
   status?: string;
   message?: string;
+  isBiometricValid?: boolean;
+  [key: string]: any;
 }
+
+type MessageType = 'status' | 'biometric' | 'generic';
 
 export function MessageDisplay({ messages, isConnected, connectedUrl, connectedEvent, connectionError }: MessageDisplayProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -29,13 +34,15 @@ export function MessageDisplay({ messages, isConnected, connectedUrl, connectedE
 
   const parseMessage = (content: string): ParsedMessage | null => {
     try {
+      console.log('Tentando fazer parse da mensagem:', content);
       let parsed = JSON.parse(content);
 
       if (typeof parsed === 'string') {
         parsed = JSON.parse(parsed);
       }
 
-      if (parsed.customerId && parsed.status && parsed.message) {
+      // Validar se tem ulid (obrigatório)
+      if (parsed.ulid && parsed.message) {
         return parsed;
       }
       return null;
@@ -46,16 +53,97 @@ export function MessageDisplay({ messages, isConnected, connectedUrl, connectedE
     }
   };
 
-  const getStatusClass = (status: string): string => {
-    const statusLower = status.toLowerCase().trim();
-    console.log('Status recebido:', status, '| Lowercase:', statusLower);
+  const getMessageType = (message: ParsedMessage): MessageType => {
+    if (message.status) return 'status';
+    if (message.isBiometricValid !== undefined) return 'biometric';
+    return 'generic';
+  };
 
-    if (statusLower === 'aprovado') return 'status-aprovado';
-    if (statusLower === 'reprovado' || statusLower === 'rejeitado') return 'status-reprovado';
-    if (statusLower === 'pendente') return 'status-pendente';
+  const getStatusClass = (message: ParsedMessage): string => {
+    const messageType = getMessageType(message);
 
-    console.warn('Status não reconhecido, usando vermelho como padrão:', status);
+    if (messageType === 'status') {
+      const statusLower = message.status!.toLowerCase().trim();
+      console.log('Status recebido:', message.status, '| Lowercase:', statusLower);
+
+      if (statusLower === 'aprovado') return 'status-aprovado';
+      if (statusLower === 'reprovado' || statusLower === 'rejeitado') return 'status-reprovado';
+      if (statusLower === 'pendente') return 'status-pendente';
+
+      console.warn('Status não reconhecido, usando vermelho como padrão:', message.status);
+      return 'status-reprovado';
+    }
+
+    if (messageType === 'biometric') {
+      return message.isBiometricValid ? 'status-aprovado' : 'status-reprovado';
+    }
+
     return 'status-reprovado';
+  };
+
+  const renderMessageContent = (message: ParsedMessage, messageType: MessageType) => {
+    const commonFields = (
+      <>
+        <div className="card-field">
+          <span className="field-label">ulid:</span>
+          <span className="field-value">{message.ulid}</span>
+        </div>
+      </>
+    );
+
+    if (messageType === 'status') {
+      return (
+        <>
+          {commonFields}
+          <div className="card-field">
+            <span className="field-label">Status:</span>
+            <span className="field-value status-badge">{message.status}</span>
+          </div>
+          <div className="card-field">
+            <span className="field-label">Message:</span>
+            <span className="field-value">{message.message}</span>
+          </div>
+        </>
+      );
+    }
+
+    if (messageType === 'biometric') {
+      return (
+        <>
+          {commonFields}
+          <div className="card-field">
+            <span className="field-label">Biometria Válida:</span>
+            <span className={`field-value status-badge ${message.isBiometricValid ? 'biometric-valid' : 'biometric-invalid'}`}>
+              {message.isBiometricValid ? '✓ Sim' : '✗ Não'}
+            </span>
+          </div>
+          <div className="card-field">
+            <span className="field-label">Message:</span>
+            <span className="field-value">{message.message}</span>
+          </div>
+        </>
+      );
+    }
+
+    // Exibir todos os campos para tipo genérico
+    return (
+      <>
+        {commonFields}
+        {Object.entries(message).map(([key, value]) => {
+          if (key === 'ulid' || key === 'message') return null;
+          return (
+            <div key={key} className="card-field">
+              <span className="field-label">{key}:</span>
+              <span className="field-value">{String(value)}</span>
+            </div>
+          );
+        })}
+        <div className="card-field">
+          <span className="field-label">Message:</span>
+          <span className="field-value">{message.message}</span>
+        </div>
+      </>
+    );
   };
 
   return (
@@ -91,24 +179,14 @@ export function MessageDisplay({ messages, isConnected, connectedUrl, connectedE
           messages.map((message, index) => {
             const parsedMessage = parseMessage(message.content);
             if (parsedMessage) {
+              const messageType = getMessageType(parsedMessage);
               return (
-                <div key={index} className={`message-card ${getStatusClass(parsedMessage.status!)}`}>
+                <div key={index} className={`message-card ${getStatusClass(parsedMessage)}`}>
                   <div className="message-timestamp">
                     {message.timestamp.toLocaleTimeString()}
                   </div>
                   <div className="card-content">
-                    <div className="card-field">
-                      <span className="field-label">CustomerId:</span>
-                      <span className="field-value">{parsedMessage.customerId}</span>
-                    </div>
-                    <div className="card-field">
-                      <span className="field-label">Status:</span>
-                      <span className="field-value status-badge">{parsedMessage.status}</span>
-                    </div>
-                    <div className="card-field">
-                      <span className="field-label">Message:</span>
-                      <span className="field-value">{parsedMessage.message}</span>
-                    </div>
+                    {renderMessageContent(parsedMessage, messageType)}
                   </div>
                 </div>
               );

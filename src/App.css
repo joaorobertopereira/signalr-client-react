@@ -72,11 +72,65 @@ html, body {
 }
 
 @media (max-width: 968px) {
+  #root {
+    padding: 10px;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .app {
+    overflow: hidden;
+  }
+
   .app-main {
     grid-template-columns: 1fr;
+    overflow: hidden;
+  }
+
+  .left-panel,
+  .right-panel {
+    overflow: visible;
+    height: auto;
+    min-height: auto;
+  }
+
+  .app-header {
+    margin-bottom: 10px;
+    padding: 12px 15px;
   }
 
   .app-header h1 {
     font-size: 1.5em;
+  }
+
+  .app-header p {
+    font-size: 0.85em;
+  }
+}
+
+@media (max-width: 640px) {
+  #root {
+    padding: 8px;
+  }
+
+  .app-header {
+    padding: 10px 12px;
+  }
+
+  .app-header h1 {
+    font-size: 1.3em;
+  }
+
+  .app-header p {
+    font-size: 0.8em;
+  }
+
+  .app-main {
+    gap: 10px;
+  }
+
+  .left-panel,
+  .right-panel {
+    gap: 10px;
   }
 }

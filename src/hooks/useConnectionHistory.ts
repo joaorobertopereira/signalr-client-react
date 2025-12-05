@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface ConnectionHistory {
   urls: string[];
@@ -32,12 +32,12 @@ export function useConnectionHistory() {
     setHistory((prev) => {
       const filtered = prev.urls.filter((u) => u !== url);
       const newUrls = [url, ...filtered].slice(0, MAX_HISTORY_ITEMS);
-      
+
       const newHistory = {
         ...prev,
         urls: newUrls,
       };
-      
+
       localStorage.setItem(STORAGE_KEY, JSON.stringify(newHistory));
       return newHistory;
     });
@@ -49,12 +49,12 @@ export function useConnectionHistory() {
     setHistory((prev) => {
       const filtered = prev.events.filter((e) => e !== event);
       const newEvents = [event, ...filtered].slice(0, MAX_HISTORY_ITEMS);
-      
+
       const newHistory = {
         ...prev,
         events: newEvents,
       };
-      
+
       localStorage.setItem(STORAGE_KEY, JSON.stringify(newHistory));
       return newHistory;
     });
