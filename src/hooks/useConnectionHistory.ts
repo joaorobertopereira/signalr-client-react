@@ -7,7 +7,7 @@ export function useConnectionHistory() {
     const [urls, setUrls] = useState<string[]>([]);
     const [events, setEvents] = useState<string[]>([]);
 
-    const addHistoryItem = useCallback((item: string, history: string[], setHistory: React.Dispatch<React.SetStateAction<string[]>>) => {
+    const addHistoryItem = useCallback((item: string, setHistory: React.Dispatch<React.SetStateAction<string[]>>) => {
         setHistory((prev) => {
             const lowercasedItem = item.toLowerCase();
             const filteredHistory = prev.filter((i) => i.toLowerCase() !== lowercasedItem);
@@ -17,14 +17,13 @@ export function useConnectionHistory() {
     }, []);
 
     const addUrl = useCallback((url: string) => {
-        addHistoryItem(url, urls, setUrls);
-    }, [urls, addHistoryItem]);
+        addHistoryItem(url, setUrls);
+    }, [addHistoryItem]);
 
     const addEvent = useCallback((eventName: string) => {
-        addHistoryItem(eventName, events, setEvents);
-    }, [events, addHistoryItem]);
+        addHistoryItem(eventName, setEvents);
+    }, [addHistoryItem]);
 
     return { urls, events, addUrl, addEvent };
 }
 
-// Criado em 11/12/2025 por IA.
