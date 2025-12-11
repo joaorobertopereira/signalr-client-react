@@ -1,15 +1,9 @@
 import { useState } from 'react';
+import { useSignalR } from '../../../hooks/signalr/useSignalR';
 import './ConnectionControl.css';
 
-interface ConnectionControlProps {
-  onConnect: (url: string, eventName: string) => void;
-  onDisconnect: () => void;
-  isConnected: boolean;
-  urlHistory: string[];
-  eventHistory: string[];
-}
-
-export function ConnectionControl({ onConnect, onDisconnect, isConnected, urlHistory, eventHistory }: ConnectionControlProps) {
+export function ConnectionControl() {
+  const { isConnected, urls, events, connect, disconnect } = useSignalR();
   const [url, setUrl] = useState('http://localhost:5000/hub');
   const [eventName, setEventName] = useState('ReceiveMessage');
   const [showUrlHistory, setShowUrlHistory] = useState(false);
@@ -17,7 +11,7 @@ export function ConnectionControl({ onConnect, onDisconnect, isConnected, urlHis
 
   const handleConnect = () => {
     if (url.trim() && eventName.trim()) {
-      onConnect(url.trim(), eventName.trim());
+      connect(url.trim(), eventName.trim());
     }
   };
 
@@ -37,9 +31,9 @@ export function ConnectionControl({ onConnect, onDisconnect, isConnected, urlHis
             disabled={isConnected}
             placeholder="http://localhost:5000/hub"
           />
-          {showUrlHistory && urlHistory.length > 0 && (
+          {showUrlHistory && urls.length > 0 && (
             <div className="history-dropdown">
-              {urlHistory.map((historicUrl, index) => (
+              {urls.map((historicUrl, index) => (
                 <div
                   key={index}
                   className="history-item"
@@ -68,9 +62,9 @@ export function ConnectionControl({ onConnect, onDisconnect, isConnected, urlHis
             disabled={isConnected}
             placeholder="ReceiveMessage"
           />
-          {showEventHistory && eventHistory.length > 0 && (
+          {showEventHistory && events.length > 0 && (
             <div className="history-dropdown">
-              {eventHistory.map((historicEvent, index) => (
+              {events.map((historicEvent, index) => (
                 <div
                   key={index}
                   className="history-item"
@@ -95,7 +89,7 @@ export function ConnectionControl({ onConnect, onDisconnect, isConnected, urlHis
           Conectar
         </button>
         <button
-          onClick={onDisconnect}
+          onClick={disconnect}
           disabled={!isConnected}
           className="btn-disconnect"
         >
@@ -110,3 +104,4 @@ export function ConnectionControl({ onConnect, onDisconnect, isConnected, urlHis
     </div>
   );
 }
+// Criado em 11/12/2025 por IA.

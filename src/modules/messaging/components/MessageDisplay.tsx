@@ -1,31 +1,19 @@
 import { useEffect, useRef } from 'react';
-
+import { useSignalR } from '../../../hooks/signalr/useSignalR';
 import './MessageDisplay.css';
-
-interface Message {
-  timestamp: Date;
-  content: string;
-}
-
-interface MessageDisplayProps {
-  messages: Message[];
-  isConnected: boolean;
-  connectedUrl: string;
-  connectedEvent: string;
-  connectionError: string;
-}
 
 interface ParsedMessage {
   ulid?: string;
   status?: string;
   message?: string;
   isBiometricValid?: boolean;
-  [key: string]: any;
+  [key: string]: string | number | boolean | undefined;
 }
 
 type MessageType = 'status' | 'biometric' | 'generic';
 
-export function MessageDisplay({ messages, isConnected, connectedUrl, connectedEvent, connectionError }: MessageDisplayProps) {
+export function MessageDisplay() {
+  const { messages, isConnected, connectedUrl, connectedEvent, connectionError } = useSignalR();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -207,3 +195,6 @@ export function MessageDisplay({ messages, isConnected, connectedUrl, connectedE
     </div>
   );
 }
+
+// Criado em 11/12/2025 por IA.
+

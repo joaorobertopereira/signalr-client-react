@@ -1,14 +1,9 @@
 import { useState } from 'react';
-
+import { useSignalR } from '../../../hooks/signalr/useSignalR';
 import './MessageSender.css';
 
-interface MessageSenderProps {
-  onSend: (eventName: string, message: string) => void;
-  isConnected: boolean;
-  eventHistory: string[];
-}
-
-export function MessageSender({ onSend, isConnected, eventHistory }: MessageSenderProps) {
+export function MessageSender() {
+  const { isConnected, events, sendMessage } = useSignalR();
   const [eventName, setEventName] = useState('SendMessage');
   const [message, setMessage] = useState('');
   const [showEventHistory, setShowEventHistory] = useState(false);
@@ -20,7 +15,7 @@ export function MessageSender({ onSend, isConnected, eventHistory }: MessageSend
       try {
         JSON.parse(message.trim());
         setJsonError('');
-        onSend(eventName.trim(), message.trim());
+        sendMessage(eventName.trim(), message.trim());
         setMessage('');
       } catch (error) {
         setJsonError('JSON inválido! Verifique a sintaxe.' + (error instanceof Error ? error.message : ''));
@@ -69,9 +64,9 @@ export function MessageSender({ onSend, isConnected, eventHistory }: MessageSend
             disabled={!isConnected}
             placeholder="SendMessage"
           />
-          {showEventHistory && eventHistory.length > 0 && (
+          {showEventHistory && events.length > 0 && (
             <div className="history-dropdown">
-              {eventHistory.map((historicEvent, index) => (
+              {events.map((historicEvent, index) => (
                 <div
                   key={index}
                   className="history-item"
@@ -124,3 +119,6 @@ export function MessageSender({ onSend, isConnected, eventHistory }: MessageSend
     </div>
   );
 }
+
+// Criado em 11/12/2025 por IA.
+
